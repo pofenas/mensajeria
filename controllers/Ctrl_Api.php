@@ -329,8 +329,8 @@ class  Ctrl_Api extends \zfx\Controller
          */
         public function out($payload, $error=0, $errmsg="")
         {
-                $payload['error'] = $error;
-                $payload['errmsg'] = $errmsg;
+                //$payload['error'] = $error;
+                //$payload['errmsg'] = $errmsg;
                 echo json_encode($payload);
                 
         }    
