@@ -405,7 +405,7 @@ class  Ctrl_Api extends \zfx\Controller
                 $timestamp = $fechaHora = date('Y-m-d H:i:s', time());
                 $qry = "
                 INSERT INTO mensajes
-                (id_usuario_o,  hora_edicion, mensaje)
+                (id_usuario,  hora_edicion, mensaje)
                 VALUES ($id_usuario_o,'$timestamp', '$mensaje')
                 RETURNING id_mensaje";
                 return $this->db->qr($qry)['id_mensaje'];
