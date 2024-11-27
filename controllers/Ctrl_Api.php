@@ -200,6 +200,7 @@ class  Ctrl_Api extends \zfx\Controller
                 $usuario = $_POST["usuario"];
                 $nombre = $_POST["nombre"];
                 $observaciones = $_POST["observaciones"];
+                $password = $_POST["password"];
                 $ret = $this->_recuperarusuarionombre($nombre);
                 if (! is_null($ret))    
                 {
@@ -212,8 +213,9 @@ class  Ctrl_Api extends \zfx\Controller
                         $this->out(array(),10,"Ya existe un usuario con usuario $usuario");
                         return;
                 }
+                $token = md5(strcat(usuario,password));
                 $qry = "
-                INSERT INTO usuarios (usuario, nombre, observaciones) VALUES ('$usuario', '$nombre', '$observaciones')";
+                INSERT INTO usuarios (usuario, nombre, observaciones,token) VALUES ('$usuario', '$nombre', '$observaciones','$token')";
                 $this->db->q( $qry);
                 $this->out(array("usuario"=>$usuario,
                                           "nombre"=>$nombre,
