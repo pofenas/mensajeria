@@ -12,7 +12,6 @@ class  Ctrl_Api extends \zfx\Controller
         public function _main()
         {
                 $res = $this->_autoexec();
-                \zfx\Debug::show($res);
                 if (!$res) 
                         die("Action not found");
                 
@@ -88,7 +87,9 @@ class  Ctrl_Api extends \zfx\Controller
         }
         public function recuperarusuariosgrupo()
         {
-                $id_grupo = $_POST['id_grupo'];
+                
+                $id_grupo = $this->getpost('id_grupo');
+                
                 $this->out($this->_recuperarusuariosgrupo($id_grupo),0,"");
         }
         public function borrargrupo()
@@ -330,8 +331,19 @@ class  Ctrl_Api extends \zfx\Controller
         {
                 $payload['error'] = $error;
                 $payload['errmsg'] = $errmsg;
-                echo(json_encode($payload));
+                echo json_encode($payload);
+                
         }    
+        private function getpost($varname)
+        {
+                if(isset($_POST[$varname]))
+                        return $_POST[$varname];
+                else
+                if(isset($_GET[$varname]))
+                        return $_GET[$varname]; 
+                else
+                return null;
+        }
         private function _borrargrupo($id_grupo)
         {
                 $qry = "SELECT id_grupo FROM grupos WHERE id_grupo = $id_grupo";

@@ -280,7 +280,7 @@ class PgDB
      * @param string $query Query to be executed
      * @param string $column Optional column name for retrieving a single value.
      */
-    public function qro($query, $column = NULL)
+    public function qo($query, $column = NULL)
     {
         $this->lastRes = NULL;
         $res           = pg_query($this->resConn, $query);
