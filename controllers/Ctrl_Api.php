@@ -144,6 +144,26 @@ class  Ctrl_Api extends \zfx\Controller
                 if (!is_null($borrame))
                         $this->_borrargrupo($borrame);
         }
+        /**
+         * 
+         * U S U A R I O S
+         * 
+         */
+        public function uregistrar()
+        {
+                $id_usuario = getpost("id_usuario");
+                $numero = getpost("numero");
+                $user = New User($this->db);
+                $user.buscarRegistro();
+        }
+        public function ubregistro()
+        {
+                $numero = getpost("numero");
+                $user = New User($this->db);
+                $ret = $user.buscarRegistro();
+                if (is_null(($ret)))
+
+        }
         public function unombre()
         {
                 $id_usuario = $_POST["id_usuario"];
@@ -223,6 +243,11 @@ class  Ctrl_Api extends \zfx\Controller
                                           "observaciones"=>$observaciones),0,"");
 
         }
+        /*
+        *
+        * M E N S A J E S 
+        *
+        */
         public function mcrear()
         {
                 $id_usuario_o = $_POST["id_usuario_o"];
@@ -329,8 +354,8 @@ class  Ctrl_Api extends \zfx\Controller
          */
         public function out($payload, $error=0, $errmsg="")
         {
-                //$payload['error'] = $error;
-                //$payload['errmsg'] = $errmsg;
+                $payload['error'] = $error;
+                $payload['errmsg'] = $errmsg;
                 echo json_encode($payload);
                 
         }    
