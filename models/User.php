@@ -17,6 +17,16 @@ class user
         $ret = $this->db->qo($qry);
         return $ret;
     }
+    public function registrar($id_usuario, $numero)
+    {
+        $qry = "
+        INSERT INTO registro
+        (id_usuario,numero)
+        VALUES
+        ($id_usuario,$numero)";
+        $ret = $this->db->qo($qry);
+        return $ret;
+    }
 
 
 }

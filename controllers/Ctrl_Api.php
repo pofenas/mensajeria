@@ -151,18 +151,18 @@ class  Ctrl_Api extends \zfx\Controller
          */
         public function uregistrar()
         {
-                $id_usuario = getpost("id_usuario");
-                $numero = getpost("numero");
+                $id_usuario = $this->getpost("id_usuario");
+                $numero = $this->getpost("numero");
                 $user = New User($this->db);
-                $user.buscarRegistro();
+                $user->registrar($id_usuario, $numero);
         }
         public function ubregistro()
         {
-                $numero = getpost("numero");
+                $numero = $this->getpost("numero");
                 $user = New User($this->db);
-                $ret = $user.buscarRegistro();
-                if (is_null(($ret)));
-
+                $ret = $user->buscarRegistro($numero);
+                if (is_null(($ret)))
+                        $this->outErr(404,"Not found");
         }
         public function unombre()
         {
@@ -352,12 +352,14 @@ class  Ctrl_Api extends \zfx\Controller
          * @param string $errmsg
          * @return void
          */
-        public function out($payload, $error=0, $errmsg="")
+        public function out($payload)
         {
-                $payload['error'] = $error;
-                $payload['errmsg'] = $errmsg;
                 echo json_encode($payload);
-                
+        }
+        public function outErr($errcode,$errmsg)
+        {
+                $salida = array ('errcode'=>$errcode, 'errmsg'=>$errmsg);
+                echo json_encode($salida);
         }    
         private function getpost($varname)
         {
