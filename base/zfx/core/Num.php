@@ -348,6 +348,32 @@ class Num
     // --------------------------------------------------------------------
 
     /**
+     * Dividir el actual número, que será el dividendo, entre cierto número especificado, que será el divisor.
+     * El resultado (cociente) pasa a sustitur el valor de la actual instancia
+     * Si el divisor es cero, el resultado es cero.
+     *
+     * @param mixed $x Número por el que dividir. Puede ser un Num o algo que entiende el constructor de Num
+     * @return $this
+     *
+     * @author Jorge A. Montes Pérez <jorge@zerfrex.com>
+     */
+    public function divzMe($x)
+    {
+        if (!($x instanceof self)) {
+            $x = new Num($x);
+        }
+        if ($x->eq(0)) {
+            $this->setVal(0);
+        }
+        else {
+            $this->setVal(bcdiv($this->getVal(), $x->getVal(), self::PRE), FALSE);
+        }
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Restar un número (sustraendo) al actual número (minuendo)
      * El resultado se devuelve como otra instancia diferente
      *

@@ -285,6 +285,19 @@ class Localizer
     // --------------------------------------------------------------------
 
     /**
+     * Establecer información de idioma local a una clave dada
+     *
+     * @param string $key Clave a modificar
+     * @param string $value Valor a establecer
+     */
+    public function setLangInfoKey($key, $value)
+    {
+        $this->langInfo[$key] = $value;
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
      * Convert a localized datetime value to a DateTime object
      *
      * @param string $value Localized datetime
@@ -429,6 +442,7 @@ class Localizer
      * 'fieldFilePath|tabla|campo'   Ruta local del fichero correspondiente a ese campo
      * 'fieldImageUrl|tabla|campo'   URL de la imagen correspondiente a ese campo
      * 'fieldFileUrl|tabla|campo'    URL del fichero correspondiente a ese campo
+     * 's2t'                         Son segundos y debe mostrarse como HHH:MM
      *
      * @param array $specs Array con las especificaciones
      * @param array|null $record RecordSet a tratar
@@ -533,6 +547,14 @@ class Localizer
                     case 'fieldFileUrl':
                     {
                         $fieldValue = FieldViewFile::getLocalUrl($params[1], $params[2], $fieldValue);
+                        break;
+                    }
+                    case 's2t':
+                    {
+                        $ts         = (int)$fieldValue;
+                        $h          = (int)($ts / 3600);
+                        $m          = (int)(($ts % 3600) / 60);
+                        $fieldValue = sprintf("%02u:%02u", $h, $m);
                         break;
                     }
                 }

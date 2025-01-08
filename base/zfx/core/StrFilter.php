@@ -51,7 +51,7 @@ class StrFilter
      */
     public static function lowerCase($str)
     {
-        return mb_convert_case($str, MB_CASE_LOWER, 'UTF-8');
+        return mb_convert_case((string)$str, MB_CASE_LOWER, 'UTF-8');
     }
 
     // --------------------------------------------------------------------
@@ -64,7 +64,7 @@ class StrFilter
      */
     public static function upperCase($str)
     {
-        return mb_convert_case($str, MB_CASE_UPPER, 'UTF-8');
+        return mb_convert_case((string)$str, MB_CASE_UPPER, 'UTF-8');
     }
 
     // --------------------------------------------------------------------
@@ -77,7 +77,7 @@ class StrFilter
      */
     public static function titleCase($str)
     {
-        return mb_convert_case($str, MB_CASE_TITLE, 'UTF-8');
+        return mb_convert_case((string)$str, MB_CASE_TITLE, 'UTF-8');
     }
 
     // --------------------------------------------------------------------
@@ -92,7 +92,7 @@ class StrFilter
     public static function quote($str, $escape = '')
     {
         if ($escape != '') {
-            $str = preg_replace(array("%'%u"), array($escape . "'"), $str);
+            $str = preg_replace(array("%'%u"), array((string)$escape . "'"), (string)$str);
         }
         return '\'' . $str . '\'';
     }
@@ -108,6 +108,8 @@ class StrFilter
      */
     public static function doubleQuote($str, $escape = '')
     {
+        $str    = (string)$str;
+        $escape = (string)$escape;
         if ($escape != '') {
             $str = preg_replace(array('%"%u'), array($escape . '"'), $str);
         }
@@ -124,6 +126,7 @@ class StrFilter
      */
     public static function escapeMySQL($str)
     {
+        $str            = (string)$str;
         $ret            = '';
         $forbiddenChars = array(
             "\x00",
@@ -167,7 +170,7 @@ class StrFilter
      */
     public static function HTMLencode($str)
     {
-        return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8');
     }
 
     // --------------------------------------------------------------------
@@ -180,7 +183,7 @@ class StrFilter
      */
     public static function HTMLdecode($str)
     {
-        return html_entity_decode($str, ENT_QUOTES, 'UTF-8');
+        return html_entity_decode((string)$str, ENT_QUOTES, 'UTF-8');
     }
 
     // --------------------------------------------------------------------
@@ -193,7 +196,7 @@ class StrFilter
      */
     public static function spaceClear($str)
     {
-        $str = preg_replace('/(^\s+)|(\s+$)/us', '', $str);
+        $str = preg_replace('/(^\s+)|(\s+$)/us', '', (string)$str);
         return $str;
     }
 
@@ -207,6 +210,7 @@ class StrFilter
      */
     public static function spaceClearAll($str)
     {
+        $str = (string)$str;
         $ret = preg_replace('/\s/u', '', $str);
         return $ret;
     }
@@ -223,6 +227,7 @@ class StrFilter
      */
     public static function spaceCompress($str)
     {
+        $str = (string)$str;
         $ret = preg_replace('/((\s){2,})/u', ' ', $str);
         return $ret;
     }
@@ -249,6 +254,7 @@ class StrFilter
      */
     public static function getID($str, $spaceSub = '-')
     {
+        $str = (string)$str;
         if ($spaceSub != '_' && $spaceSub != '-' && $spaceSub != '') {
             $spaceSub = '-';
         }
@@ -314,7 +320,8 @@ class StrFilter
      */
     public static function filter($str, $filterList)
     {
-        foreach ($filterList as $proc) {
+        $str = (string)$str;
+        if ($filterList) foreach ($filterList as $proc) {
             $str = self::$proc($str);
         }
         return $str;
@@ -325,19 +332,20 @@ class StrFilter
     /**
      * Encode 4-bytes unicode string to alphanumeric string.
      *
-     * @param $string String to be encoded
+     * @param $str String to be encoded
      * @return string|null
      *
      * @see safeDecode()
      */
-    public static function safeEncode($string)
+    public static function safeEncode($str)
     {
+        $str    = (string)$str;
         $target = 'byte4be';
-        $bytes  = mb_convert_encoding($string, $target, 'UTF-8');
-        $count  = mb_strlen($bytes, $target);
+        $bytes  = mb_convert_encoding($str, $target, 'UTF-8');
+        $count  = strlen($bytes);
         $ret    = '';
         for ($i = 0; $i < $count; $i++) {
-            $byte = mb_substr($bytes, $i, 1, $target);
+            $byte = substr($bytes, $i, 1);
             $ret  .= sprintf("%02x", ord($byte));
         }
         return preg_replace_callback('/(0{2,9})/', function ($m) {
@@ -350,20 +358,21 @@ class StrFilter
     /**
      * Decodes a previously encoded string to a 4-byte unicode string.
      *
-     * @param string $string String to be decoded
+     * @param string $str String to be decoded
      * @return string
      *
      * @see safeEncode()
      */
-    public static function safeDecode($string)
+    public static function safeDecode($str)
     {
-        $string = preg_replace_callback('/([g-n])/', function ($m) {
+        $str   = (string)$str;
+        $str   = preg_replace_callback('/([g-n])/', function ($m) {
             return str_repeat('0', ord($m[1]) - 101);
-        }, $string);
-        $ret    = '';
-        $count  = strlen($string);
+        }, $str);
+        $ret   = '';
+        $count = strlen($str);
         for ($i = 0; $i < $count; $i = $i + 2) {
-            $hex = substr($string, $i, 2);
+            $hex = substr($str, $i, 2);
             $ret .= chr(intval($hex, 16));
         }
         return mb_convert_encoding($ret, 'UTF-8', 'byte4be');
@@ -374,19 +383,20 @@ class StrFilter
     /**
      * Dashes to camel
      *
-     * @param string $string
+     * @param string $str
      * @param boolean $upperFirst if true, first letter will be uppercase.
      * @return string
      * @example: this-is-a-example-string => thisIsAExampleString
      */
-    public static function camelCase($string, $upperFirst = FALSE, $sep = '-')
+    public static function camelCase($str, $upperFirst = FALSE, $sep = '-')
     {
+        $str = (string)$str;
         if ($upperFirst) {
-            $conv = preg_replace('/' . $sep . '/u', ' ', $string);
+            $conv = preg_replace('/' . $sep . '/u', ' ', $str);
             return preg_replace('/\s/u', '', mb_convert_case($conv, MB_CASE_TITLE, 'UTF-8'));
         }
         else {
-            $conv     = preg_replace('/' . $sep . '/u', ' ', preg_replace('/(^\s+)|(\s+$)/us', '', $string));
+            $conv     = preg_replace('/' . $sep . '/u', ' ', preg_replace('/(^\s+)|(\s+$)/us', '', $str));
             $expanded = mb_convert_case('x' . $conv, MB_CASE_TITLE, 'UTF-8');
             return preg_replace('/\s/u', '', mb_substr($expanded, 1, mb_strlen($expanded, 'UTF-8'), 'UTF-8'));
         }
@@ -396,16 +406,17 @@ class StrFilter
 
     /**
      * camelCase to dashes
-     * @param string $string
+     * @param string $str
      * @return string
      * @example: thisIsAnExample => this-is-an-example
      */
-    public static function dashes($string, $sep = '-')
+    public static function dashes($str, $sep = '-')
     {
-        $size   = mb_strlen($string, 'UTF-8');
-        $string = mb_substr($string, 0, 1, 'UTF-8') . preg_replace('/(\p{Lu})/u', $sep . '$1',
-                mb_substr($string, 1, $size - 1, 'UTF-8'));
-        return mb_convert_case($string, MB_CASE_LOWER, 'UTF-8');
+        $str  = (string)$str;
+        $size = mb_strlen($str, 'UTF-8');
+        $str  = mb_substr($str, 0, 1, 'UTF-8') . preg_replace('/(\p{Lu})/u', $sep . '$1',
+                mb_substr($str, 1, $size - 1, 'UTF-8'));
+        return mb_convert_case($str, MB_CASE_LOWER, 'UTF-8');
     }
 
     // --------------------------------------------------------------------
@@ -413,13 +424,14 @@ class StrFilter
     /**
      * Initials of a spaced-separated list of words
      *
-     * @param $string
+     * @param $str
      * @return string
      */
-    public static function initials($string)
+    public static function initials($str)
     {
+        $str      = (string)$str;
         $initials = '';
-        $parts    = explode(' ', self::filter($string, array('upperCase', 'spaceClear', 'spaceCompress')));
+        $parts    = explode(' ', self::filter($str, array('upperCase', 'spaceClear', 'spaceCompress')));
         if (va($parts)) {
             foreach ($parts as $part) {
                 $initials .= mb_substr($part, 0, 1, 'UTF-8');

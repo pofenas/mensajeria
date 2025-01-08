@@ -148,6 +148,7 @@ class StrValidator
      */
     public static function segFunction($str)
     {
+        $str    = (string)$str;
         $result = preg_match('/^[a-z]+[-a-z0-9]*$/u', $str);
         if ($result == 1) {
             return (TRUE);

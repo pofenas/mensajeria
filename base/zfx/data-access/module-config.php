@@ -55,16 +55,8 @@ $cfg['pg'] = array(
         'dbDatabase' => '',
         'dbPort'     => '5432'
     )
-);$cfg['dbSys'] = 'pg';
-$cfg['pg'] = array(
-       'default' => array(
-         'dbHost' => 'localhost',
-         'dbUser' => 'pofenas',
-         'dbPass' => 'botijo',
-         'dbDatabase' => 'mensajeria',
-         'dbPort' => '5432'
-         )
 );
+
 // MySQL profiles
 $cfg['my'] = array(
     'default' => array(

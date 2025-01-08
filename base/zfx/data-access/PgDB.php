@@ -75,6 +75,7 @@ class PgDB
         if (!a(Config::get('pg'), $profile)) {
             Debug::devError("Unknown DB profile: '$profile'.");
         }
+
         $str                = 'host=' . a(a(Config::get('pg'), $profile), 'dbHost');
         $str                .= ' port=' . a(a(Config::get('pg'), $profile), 'dbPort');
         $str                .= ' dbname=' . a(a(Config::get('pg'), $profile), 'dbDatabase');
@@ -87,7 +88,7 @@ class PgDB
 
         if ($this->resConn == FALSE) {
             Debug::devError("Postgresql connection error.");
-        } 
+        }
     }
 
     // --------------------------------------------------------------------
@@ -270,38 +271,7 @@ class PgDB
             }
         }
     }
-// --------------------------------------------------------------------
 
-    /**
-     * Query and get Row as Object
-     *
-     * Execute query and return the first row as map array or a single value.
-     *
-     * @param string $query Query to be executed
-     * @param string $column Optional column name for retrieving a single value.
-     */
-    public function qo($query, $column = NULL)
-    {
-        $this->lastRes = NULL;
-        $res           = pg_query($this->resConn, $query);
-        if (!$res) {
-            if ($this->ignoreErrors == FALSE || pg_connection_status($this->resConn) !== PGSQL_CONNECTION_OK) {
-                $this->queryError($query);
-            }
-            return NULL;
-        }
-        else {
-            if (pg_num_rows($res) > 0) {
-                $row = pg_fetch_object($res, 0);
-                if (!$column) {
-                    return $row;
-                }
-                else {
-                    return a($row, $column);
-                }
-            }
-        }
-    }
     // --------------------------------------------------------------------
 
     /**

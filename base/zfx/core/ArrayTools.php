@@ -112,7 +112,9 @@ class ArrayTools
 
     static function prefixValues(array &$arrayOriginal = NULL, $prefix)
     {
-        if (!$arrayOriginal) return;
+        if (!$arrayOriginal) {
+            return;
+        }
         foreach ($arrayOriginal as &$value) {
             $value = $prefix . $value;
         }

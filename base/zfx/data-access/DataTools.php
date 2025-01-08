@@ -98,7 +98,7 @@ class DataTools
      */
     public static function getDate($dateString)
     {
-        $ret = DateTime::createFromFormat(Config::get('dbDateFormat'), $dateString);
+        $ret = DateTime::createFromFormat(Config::get('dbDateFormat'), (string)$dateString);
         if (!$ret instanceof DateTime) {
             $ret = NULL;
         }
