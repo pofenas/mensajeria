@@ -5,7 +5,7 @@
  * SE RECOMIENDA NO MODIFICAR para evitar problemas al actualizar ZWF o ZAF.
  * Si se quiere modificar algo de aquí, se recomienda hacerlo en app-preconfig, local-config o app-config.
  */
-$cfg['rootUrl']    = 'http://localhost/mensajeria/';
+
 
 $cfg['autoLoadConfig']     = [
     'zaf-config',       // Configuración principal de ZAF
