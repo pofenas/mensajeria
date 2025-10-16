@@ -4,7 +4,7 @@
  * OJO!!!!!  Este fichero NO se debe incluir en implantaciones o actualizaciones de ningún tipo.
  */
 
- $cfg['rootUrl']    = 'http://localhost/mensajeria/';
+ $cfg['rootUrl']    = 'https://mua.almansa.ovh/';
 
 $cfg['pg']         = array(
     'default' => array(
